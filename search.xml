@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title></title>
-    <url>%2F2019%2F08%2F15%2F%E4%BD%A0%E5%A4%A7%E7%88%B7%2F</url>
+    <title><![CDATA[nidaye]]></title>
+    <url>%2F2019%2F06%2F22%2F%E4%BD%A0%E5%A4%A7%E7%88%B7%2F</url>
     <content type="text"><![CDATA[username=alert(7)]]></content>
+      <tags>
+        <tag>漏洞复现</tag>
+      </tags>
   </entry>
   <entry>
     <title><![CDATA[Django debug page XSS漏洞（CVE-2017-12794）]]></title>
