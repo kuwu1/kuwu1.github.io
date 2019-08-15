@@ -13,7 +13,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
   <title>
     
-      Django debug page XSS漏洞（CVE-2017-12794） | 酷武.
+       | 酷武.
     
   </title>
   <meta name="author" content="小武">
@@ -164,7 +164,7 @@
 	<!-- Page title -->
 	<p>
 		
-			当前文章&nbsp;:&nbsp;《Django debug page XSS漏洞（CVE-2017-12794）》
+			当前文章&nbsp;:&nbsp;《》
 		
 	</p>
 
@@ -273,10 +273,6 @@
 	<div class="article-title">
 		<i class="fa fa-paper-plane-o" aria-hidden="true"></i>
 		
-	<a href="/2019/06/22/Django debug page XSS漏洞（CVE-2017-12794）/" itemprop="url">
-		Django debug page XSS漏洞（CVE-2017-12794）
-	</a>
-
 	</div>
 
 	<div class="article-meta">
@@ -287,9 +283,9 @@
 
 	发布于
 
-	<a href="/2019/06/22/Django debug page XSS漏洞（CVE-2017-12794）/" itemprop="url">
-		<time datetime="2019-06-22T03:42:22.000Z" itemprop="datePublished">
-	  		2019-06-22
+	<a href="/2019/08/15/你大爷/" itemprop="url">
+		<time datetime="2019-08-15T07:29:03.272Z" itemprop="datePublished">
+	  		2019-08-15
 	  </time>
 	</a>
 	&nbsp;
@@ -305,8 +301,8 @@
 
 	更新于
 
-	<a href="/2019/06/22/Django debug page XSS漏洞（CVE-2017-12794）/" itemprop="url">
-		<time datetime="2019-06-22T03:42:22.000Z" itemprop="dateUpdated">
+	<a href="/2019/08/15/你大爷/" itemprop="url">
+		<time datetime="2019-08-15T07:29:03.272Z" itemprop="dateUpdated">
 	  		2019-08-15
 	  </time>
 	</a> 
@@ -316,13 +312,7 @@
 		</span>
 		<span>
 			<i class="fa fa-tags"></i>
-			
-	
-		<a href="/tags/漏洞复现/" class=" ">
-			漏洞复现
-		</a>
-	
-		
+					
 		</span>
 		
 		
@@ -332,7 +322,7 @@
 	</div>
 
 	<div class="article-content" id="article-content">
-		<p>1.创建个用户：ip:8000/create_user/?username=<script>alert(7)</script><br><img src="https://s2.ax1x.com/2019/08/15/mEPH54.png" alt="mEPH54.png"><br>显示用户已创建。<br>2.触发漏洞，再次访问ip:8000/create_user/?username=<script>alert(7)</script><br><img src="https://s2.ax1x.com/2019/08/15/mEPqPJ.png" alt="mEPqPJ.png"><br>3.触发异常：duplicate key value violates unique constraint “xss_user_username_key”<br>DETAIL: Key (username)=(<script>alert(7)</script>) already exists.<br><img src="https://s2.ax1x.com/2019/08/15/mEipVO.png" alt="mEipVO.png"><br>4.这个异常被拼接进The above exception () was the direct cause of the following exception，最后触发XSS。</p>
+		<p>username=<script>alert(7)</script></p>
 	
 	</div>
 	
@@ -351,12 +341,8 @@
 	<span>
 		<a href="javascript: window.scrollTo(0, 0);">返回顶部</a>
 		
-			<a href="/2019/08/15/你大爷/" title="" rel="prev">
-				&laquo;上一篇
-			</a>
 		
-		
-			<a href="/2019/06/21/nginx+lua+ngx_lua_waf实现waf功能/" title="nginx+lua+ngx_lua_waf实现waf功能" rel="next">
+			<a href="/2019/06/22/Django debug page XSS漏洞（CVE-2017-12794）/" title="Django debug page XSS漏洞（CVE-2017-12794）" rel="next">
 				下一篇&raquo;
 			</a>
 			
@@ -374,6 +360,58 @@
 <div class="relate-post">
 	
 		<ul>
+			
+					<li>
+						<div class="relate-post-text">
+							<a class="relate-post-title" href="/2019/06/22/Django debug page XSS漏洞（CVE-2017-12794）/" title="Django debug page XSS漏洞（CVE-2017-12794）">
+								Django debug page XSS漏洞（CVE-2017-12794）			
+							</a>
+							<p class="relate-post-date">
+								<i class="fa fa-calendar"></i>
+								六月 22日, 2019				
+							</p>
+							<p class="relate-post-content">
+								1.创建个用户：ip:8000/create_user/?username=alert(7)显示用户已创建。2.触发漏洞，再次访问ip:8000/create_user/?username=alert(7)3.触发异常：duplica...
+							</p>
+						</div>
+
+						<div class="relate-post-cover">
+							<a href="/2019/06/22/Django debug page XSS漏洞（CVE-2017-12794）/" title="Django debug page XSS漏洞（CVE-2017-12794）">				
+								
+								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="Django debug page XSS漏洞（CVE-2017-12794）"/>
+							</a>
+						</div>
+					</li>											
+			
+			
+					<li>
+						<div class="relate-post-text">
+							<a class="relate-post-title" href="/2019/06/21/nginx+lua+ngx_lua_waf实现waf功能/" title="nginx+lua+ngx_lua_waf实现waf功能">
+								nginx+lua+ngx_lua_waf实现waf功能			
+							</a>
+							<p class="relate-post-date">
+								<i class="fa fa-calendar"></i>
+								六月 21日, 2019				
+							</p>
+							<p class="relate-post-content">
+								用途：
+防止sql注入，本地包含，部分溢出，fuzzing测试，xss,SSRF等web攻击
+防止svn/备份之类文件泄漏
+防止ApacheBench之类压力测试工具的攻击
+屏蔽常见的扫描黑客工具，扫描器
+屏蔽异常的网络请求
+屏蔽图片...
+							</p>
+						</div>
+
+						<div class="relate-post-cover">
+							<a href="/2019/06/21/nginx+lua+ngx_lua_waf实现waf功能/" title="nginx+lua+ngx_lua_waf实现waf功能">				
+								
+								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="nginx+lua+ngx_lua_waf实现waf功能"/>
+							</a>
+						</div>
+					</li>											
+			
 			
 					<li>
 						<div class="relate-post-text">
@@ -509,59 +547,6 @@
 							<a href="/2019/06/13/ActiveMQ反序列化漏洞(CVE-2015-5254)/" title="ActiveMQ反序列化漏洞(CVE-2015-5254)">				
 								
 								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="ActiveMQ反序列化漏洞(CVE-2015-5254)"/>
-							</a>
-						</div>
-					</li>											
-			
-			
-					<li>
-						<div class="relate-post-text">
-							<a class="relate-post-title" href="/2019/08/15/你大爷/" title="">
-											
-							</a>
-							<p class="relate-post-date">
-								<i class="fa fa-calendar"></i>
-								八月 15日, 2019				
-							</p>
-							<p class="relate-post-content">
-								username=alert(7)
-
-							</p>
-						</div>
-
-						<div class="relate-post-cover">
-							<a href="/2019/08/15/你大爷/" title="">				
-								
-								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt=""/>
-							</a>
-						</div>
-					</li>											
-			
-			
-					<li>
-						<div class="relate-post-text">
-							<a class="relate-post-title" href="/2019/06/21/nginx+lua+ngx_lua_waf实现waf功能/" title="nginx+lua+ngx_lua_waf实现waf功能">
-								nginx+lua+ngx_lua_waf实现waf功能			
-							</a>
-							<p class="relate-post-date">
-								<i class="fa fa-calendar"></i>
-								六月 21日, 2019				
-							</p>
-							<p class="relate-post-content">
-								用途：
-防止sql注入，本地包含，部分溢出，fuzzing测试，xss,SSRF等web攻击
-防止svn/备份之类文件泄漏
-防止ApacheBench之类压力测试工具的攻击
-屏蔽常见的扫描黑客工具，扫描器
-屏蔽异常的网络请求
-屏蔽图片...
-							</p>
-						</div>
-
-						<div class="relate-post-cover">
-							<a href="/2019/06/21/nginx+lua+ngx_lua_waf实现waf功能/" title="nginx+lua+ngx_lua_waf实现waf功能">				
-								
-								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="nginx+lua+ngx_lua_waf实现waf功能"/>
 							</a>
 						</div>
 					</li>											
