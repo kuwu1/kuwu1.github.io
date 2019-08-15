@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Apache Httpd 解析漏洞]]></title>
+    <url>%2F2019%2F06%2F20%2FApache%20Httpd%20%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E%2F</url>
+    <content type="text"><![CDATA[漏洞背景：apache通过mod_php来运行脚本，其2.4.0-2.4.29中存在apache换行解析漏洞，在解析php时xxx.php\x0A将被按照PHP后缀进行解析，导致绕过一些服务器的安全策略。该漏洞属于用户配置不当产生的漏洞，与具体中间件版本无关。与其说这是漏洞，不如说是apache的特性，就是我们平常所说的从右向左解析是一样的。当apache遇到无法识别解析的文件后缀时，会向前解析，如xxx.php.123.456,在mime.types文件中如果不存在.123/.456这两种后缀，那么apache会将该文件解析为php。同样也可以在httpd.conf文件中更改参数或是直接配置.htaccess。1.这是个上传漏洞。2.直接上传个php一句话***后缀名为1.php.jgp，然后用蚁剑连接，就可以了。3.复制这个连接，去蚁剑上连接。4.连接上了。]]></content>
+      <tags>
+        <tag>漏洞复现</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[利用最新Apache解析漏洞（CVE-2017-15715）绕过上传黑名单]]></title>
     <url>%2F2019%2F06%2F15%2F%E5%88%A9%E7%94%A8%E6%9C%80%E6%96%B0Apache%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E%EF%BC%88CVE-2017-15715%EF%BC%89%E7%BB%95%E8%BF%87%E4%B8%8A%E4%BC%A0%E9%BB%91%E5%90%8D%E5%8D%95%2F</url>
     <content type="text"><![CDATA[1.绕过黑名单getshell捉包，正常能上传php文件，但是上传失败。打开拦截流量Hex模式添加一个\x0a再次上传就没有，证明上传成功了。打开访问一下。成了。]]></content>
@@ -9,7 +17,7 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析]]></title>
+    <title><![CDATA[Appweb(CVE-2018-8715)漏洞复现]]></title>
     <url>%2F2019%2F06%2F15%2FAppweb(CVE-2018-8715)%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0%2F</url>
     <content type="text"><![CDATA[漏洞背景：Appweb是一个嵌入式HTTP Web服务器，主要的设计思路是安全。这是直接集成到客户的应用和设备，便于开发和部署基于Web的应用程序和设备。它迅速（ 每秒处理3500多要求）而紧凑 ，其中包括支持动态网页制作，服务器端嵌入式脚本过程中的CGI ，可加载模块的SSL ，摘要式身份验证，虚拟主机， Apache样式配置，日志记录，单和多线程应用程序。它提供了大量的文档和示例。 漏洞复现：1.访问自己的目标。2.获取用户名，这个就显现出此漏洞的局限性了。靶场里告诉了有一个账户是joshua。通过抓包软件拦截，添加以下HTTP 头信息后，发送数据包。Authorization: Digest username=joshua3.返回状态码为200后，获取HTTP 头信息中的session。4.通过抓包软件拦截，发送POST请求，添加session到HTTP 头信息和用户名后，发送数据包。5.成了。]]></content>
       <tags>
