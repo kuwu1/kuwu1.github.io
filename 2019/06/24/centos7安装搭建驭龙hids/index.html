@@ -13,7 +13,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
   <title>
     
-      Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析 | 酷武.
+      centos7安装搭建驭龙hids | 酷武.
     
   </title>
   <meta name="author" content="小武">
@@ -164,7 +164,7 @@
 	<!-- Page title -->
 	<p>
 		
-			当前文章&nbsp;:&nbsp;《Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析》
+			当前文章&nbsp;:&nbsp;《centos7安装搭建驭龙hids》
 		
 	</p>
 
@@ -273,8 +273,8 @@
 	<div class="article-title">
 		<i class="fa fa-paper-plane-o" aria-hidden="true"></i>
 		
-	<a href="/2019/06/13/Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析/" itemprop="url">
-		Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析
+	<a href="/2019/06/24/centos7安装搭建驭龙hids/" itemprop="url">
+		centos7安装搭建驭龙hids
 	</a>
 
 	</div>
@@ -287,9 +287,9 @@
 
 	发布于
 
-	<a href="/2019/06/13/Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析/" itemprop="url">
-		<time datetime="2019-06-13T08:20:18.000Z" itemprop="datePublished">
-	  		2019-06-13
+	<a href="/2019/06/24/centos7安装搭建驭龙hids/" itemprop="url">
+		<time datetime="2019-06-24T06:28:10.000Z" itemprop="datePublished">
+	  		2019-06-24
 	  </time>
 	</a>
 	&nbsp;
@@ -305,9 +305,9 @@
 
 	更新于
 
-	<a href="/2019/06/13/Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析/" itemprop="url">
-		<time datetime="2019-06-13T08:20:18.000Z" itemprop="dateUpdated">
-	  		2019-08-15
+	<a href="/2019/06/24/centos7安装搭建驭龙hids/" itemprop="url">
+		<time datetime="2019-06-24T06:28:10.000Z" itemprop="dateUpdated">
+	  		2019-08-16
 	  </time>
 	</a> 
 
@@ -318,8 +318,8 @@
 			<i class="fa fa-tags"></i>
 			
 	
-		<a href="/tags/漏洞复现/" class=" ">
-			漏洞复现
+		<a href="/tags/安装文档/" class=" ">
+			安装文档
 		</a>
 	
 		
@@ -332,9 +332,12 @@
 	</div>
 
 	<div class="article-content" id="article-content">
-		<p>1.漏洞背景：<br>ActiveMQ 是 Apache 软件基金会下的一个开源消息驱动中间件软件。Jetty 是一个开源的 servlet 容器，它为基于 Java 的 web 容器，例如 JSP 和 servlet 提供运行环境。ActiveMQ 5.0 及以后版本默认集成了jetty。在启动后提供一个监控 ActiveMQ 的 Web 应用。</p>
-<p>2016年4月14日，国外安全研究人员 Simon Zuckerbraun 曝光 Apache ActiveMQ Fileserver 存在多个安全漏洞，可使远程***者用恶意代码替代Web应用，在受影响系统上执行远程代码（CVE-2016-3088）。<br>8161端口为web控制台端口，本漏洞就出现在web控制台中。<br>ActiveMQ的web控制台分三个应用，admin、api和fileserver，其中admin是管理员页面，api是接口，fileserver是储存文件的接口；admin和api都需要登录后才能使用，fileserver无需登录。<br>fileserver是一个RESTful API接口，我们可以通过GET、PUT、DELETE等HTTP请求对其中存储的文件进行读写操作，其设计目的是为了弥补消息队列操作不能传输、存储二进制文件的缺陷，但后来发现：其使用率并不高而且文件操作容易出现漏洞。<br>所以，ActiveMQ在5.12.x~5.13.x版本中，已经默认关闭了fileserver这个应用（你可以conf/jetty.xml中开启之）；在5.14.0版本以后，彻底删除了fileserver应用。</p>
-<p>2.漏洞利用：<br>首先 PUT 一个 Jsp 的 Webshell 到 fileserver 目录<br><img src="https://s2.ax1x.com/2019/08/15/mAJZid.png" alt="mAJZid.png"><br>下面添加的是生成一个jsp的***（msfvenom生成的payload）<br><img src="https://s2.ax1x.com/2019/08/15/mAJYJs.png" alt="mAJYJs.png"><br>然后利用 MOVE 方法将 Webshell 移入 admin/ 目录（也可以利用相对路径）<br><img src="https://s2.ax1x.com/2019/08/15/mAJBeU.png" alt="mAJBeU.png"><br>这时访问http://你的ip:8161/api/发现你的木马已经存在了。<br><a href="https://imgchr.com/i/mAJcWR" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/08/15/mAJcWR.png" alt="mAJcWR.png"></a><br>然后用kali监听，网站上执行，就能获得root权限。<br><img src="https://s2.ax1x.com/2019/08/15/mAJWy6.png" alt="mAJWy6.png"></p>
+		<p>###部署流程<br>部署 MongoDB (3.x，驭龙不兼容2.x版本)；<br>部署 Elasticsearch (5.x，驭龙暂不兼容6.x版本)；<br>启动 MongoDB 、Elasticsearch；<br>修改 web 的配置，启动 web ，在引导界面根据提示初始化数据库、规则等；<br>启动 server（服务端）；<br>部署 daemon （守护进程），启动 agent（客户端）。</p>
+<p>1.部署 MongoDB (3.x，驭龙不兼容2.x版本)。<br>下载对应安装包 <a href="https://www.mongodb.com/download-center?jmp=nav#community" target="_blank" rel="noopener">https://www.mongodb.com/download-center?jmp=nav#community</a><br>安装MongoDB并启动。<br>mkdir /data/hids/mongodb/<br>cd /usr/local/src<br>wget <a href="https://sec.ly.com/mirror/mongodb-linux-x86_64-3.6.3.tgz" target="_blank" rel="noopener">https://sec.ly.com/mirror/mongodb-linux-x86_64-3.6.3.tgz</a><br><img src="https://s2.ax1x.com/2019/08/16/mZ0HBj.png" alt="mZ0HBj.png"><br>tar -xvzf mongodb-linux-x86_64-3.6.3.tgz<br>mongodb-linux-x86_64-3.6.3/bin/mongod –dbpath /data/hids/mongodb/ –logpath /var/log/mongodb.log –fork –bind_ip 192.168.110.160(你的IP)<br><img src="https://s2.ax1x.com/2019/08/16/mZBqMD.png" alt="mZBqMD.png"><br>yum install -y mongodb-org<br>ss  -pantl<br><img src="https://s2.ax1x.com/2019/08/16/mZy0yT.png" alt="mZy0yT.png"></p>
+<p>2.部署 Elasticsearch (5.x，驭龙暂不兼容6.x版本)<br>下载安装jre依赖。<br>wget <a href="https://sec.ly.com/mirror/jre-8u161-linux-x64.rpm" target="_blank" rel="noopener">https://sec.ly.com/mirror/jre-8u161-linux-x64.rpm</a> &amp;&amp; yum -y localinstall jre-8u161-linux-x64.rpm<br><img src="https://s2.ax1x.com/2019/08/16/mZyvX8.png" alt="mZyvX8.png"><br>下载ES并解压。<br>wget <a href="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.8.tar.gz" target="_blank" rel="noopener">https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.8.tar.gz</a> &amp;&amp; tar -zxvf elasticsearch-5.6.8.tar.gz<br><img src="https://s2.ax1x.com/2019/08/16/mZ68c6.png" alt="mZ68c6.png"><br><img src="https://s2.ax1x.com/2019/08/16/mZXViR.png" alt="mZXViR.png"><br>Elasticsearch 不建议以 root 权限运行，新建一个非 root 权限用户，-p 后跟自行设定的密码。<br>groupadd elasticsearch &amp;&amp; useradd elasticsearch -g elasticsearch -p ElasticSearch666<br>修改文件夹及内部文件的所属用户及组为 elasticsearch:elasticsearch<br>chown -R elasticsearch:elasticsearch /data/hids/elasticsearch-5.6.8<br><img src="https://s2.ax1x.com/2019/08/16/mZXjmD.png" alt="mZXjmD.png"><br>centos7 以下的系统需编辑 config/elasticsearch.yml 添加<br>bootstrap.system_call_filter: false<br><img src="https://s2.ax1x.com/2019/08/16/mZj8nU.png" alt="mZj8nU.png"><br>启动es<br>su - elasticsearch -c ‘/data/hids/elasticsearch-5.6.8/bin/elasticsearch -d’<br>查看进程，开启成功。<br><img src="https://s2.ax1x.com/2019/08/16/mZjX3q.png" alt="mZjX3q.png"><br>curl请求下确认ES启动成功<br>curl -XGET -s “<a href="http://localhost:9200/_cluster/health?pretty&quot;" target="_blank" rel="noopener">http://localhost:9200/_cluster/health?pretty&quot;</a><br><img src="https://s2.ax1x.com/2019/08/16/memytI.png" alt="memytI.png"></p>
+<p>3.安装设置 web<br>将驭龙编译好的包上传到/data/hids/web中，并解压到/data/hids/web中<br>chmod 755 server web/web<br><img src="https://s2.ax1x.com/2019/08/16/menIKO.png" alt="menIKO.png"><br>vim /data/hids/web/web/conf/app.conf<br>修改登陆web管理界面的密码。密码自己设置为MD5的加密信息<br>我改的是 123  md5值32位。<br><img src="https://s2.ax1x.com/2019/08/16/meu7lV.png" alt="meu7lV.png"><br>设置完密码后继续修改配置文件<br>是否开启二次验证，这里二次验证需要Google的APP配置使用。主要是对敏感操作进行权限管理<br>因为测试阶段，所以没有开启二次验证<br>修改mongodb的地址和es的地址为安装地址<br><img src="https://s2.ax1x.com/2019/08/16/meuxYR.png" alt="meuxYR.png"><br>启动web:<br>cd web/<br>./web<br>或者后台启动：<br>nohup ./web &amp;<br>ss –antpl<br>查看80 443端口是否开启<br><img src="https://s2.ax1x.com/2019/08/16/meKyN9.png" alt="meKyN9.png"></p>
+<p>4.Web安装向导指南<br>在安装完成后，访问安装服务器的地址，使用https协议，端口443。点击初始化，初始化数据库。<br><img src="https://s2.ax1x.com/2019/08/16/meKWjK.png" alt="meKWjK.png"><br>初始化规则, 规则可以自己编写，也可以使用默认规则。初始化规则我一会单写一篇文章。<br><img src="https://s2.ax1x.com/2019/08/16/meKb9I.png" alt="meKb9I.png"><br>第三步上传文件包，文件包内包含着 agent, daemon, data 三个文件， 可从 release 里面找到对应的压缩包上传。最好三个系统版本全部上传，不然后续无法增加新的系统版本。<br>该压缩包可以在对应的系统下，使用 /build/build.py 生成。<br><img src="https://s2.ax1x.com/2019/08/16/meM94s.png" alt="meM94s.png"><br>请注意查看编辑框内的提示信息，填写相应内容。<br>点击生成“生成证书”按钮，如果 web 是运行在linux下的话，应该可以直接生成证书，如果不是linux的话，可下载私钥文件并使用提示命令生成证书，再将证书内容放置于编辑框内。<br><img src="https://s2.ax1x.com/2019/08/16/meMlgx.png" alt="meMlgx.png"></p>
+<p>这就搭建完成了。</p>
 	
 	</div>
 	
@@ -353,12 +356,8 @@
 	<span>
 		<a href="javascript: window.scrollTo(0, 0);">返回顶部</a>
 		
-			<a href="/2019/06/15/Appweb(CVE-2018-8715)漏洞复现/" title="Appweb(CVE-2018-8715)漏洞复现" rel="prev">
-				&laquo;上一篇
-			</a>
 		
-		
-			<a href="/2019/06/13/ActiveMQ反序列化漏洞(CVE-2015-5254)/" title="ActiveMQ反序列化漏洞(CVE-2015-5254)" rel="next">
+			<a href="/2019/06/23/Discuz!X前台任意文件删除漏洞重现/" title="Discuz!X前台任意文件删除漏洞重现" rel="next">
 				下一篇&raquo;
 			</a>
 			
@@ -376,6 +375,35 @@
 <div class="relate-post">
 	
 		<ul>
+			
+					<li>
+						<div class="relate-post-text">
+							<a class="relate-post-title" href="/2019/06/21/nginx+lua+ngx_lua_waf实现waf功能/" title="nginx+lua+ngx_lua_waf实现waf功能">
+								nginx+lua+ngx_lua_waf实现waf功能			
+							</a>
+							<p class="relate-post-date">
+								<i class="fa fa-calendar"></i>
+								六月 21日, 2019				
+							</p>
+							<p class="relate-post-content">
+								用途：
+防止sql注入，本地包含，部分溢出，fuzzing测试，xss,SSRF等web攻击
+防止svn/备份之类文件泄漏
+防止ApacheBench之类压力测试工具的攻击
+屏蔽常见的扫描黑客工具，扫描器
+屏蔽异常的网络请求
+屏蔽图片...
+							</p>
+						</div>
+
+						<div class="relate-post-cover">
+							<a href="/2019/06/21/nginx+lua+ngx_lua_waf实现waf功能/" title="nginx+lua+ngx_lua_waf实现waf功能">				
+								
+								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="nginx+lua+ngx_lua_waf实现waf功能"/>
+							</a>
+						</div>
+					</li>											
+			
 			
 					<li>
 						<div class="relate-post-text">
@@ -419,6 +447,29 @@
 							<a href="/2019/06/23/Drupal 远程代码执行漏洞（CVE-2018-7602）/" title="Drupal 远程代码执行漏洞（CVE-2018-7602）">				
 								
 								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="Drupal 远程代码执行漏洞（CVE-2018-7602）"/>
+							</a>
+						</div>
+					</li>											
+			
+			
+					<li>
+						<div class="relate-post-text">
+							<a class="relate-post-title" href="/2019/06/23/xss存储型漏洞/" title="XSS存储型漏洞">
+								XSS存储型漏洞			
+							</a>
+							<p class="relate-post-date">
+								<i class="fa fa-calendar"></i>
+								六月 23日, 2019				
+							</p>
+							<p class="relate-post-content">
+								利用github搭建的博客网站，上传文章发现有xss存储型漏洞。漏洞复现：1.按照我的正常上传流程，使用markdown在线编辑器写文章，然后进行上传。如上图所示，打算上传一篇漏洞复现的文章。上传成功后，打开浏览器进行访问。发现存在x...
+							</p>
+						</div>
+
+						<div class="relate-post-cover">
+							<a href="/2019/06/23/xss存储型漏洞/" title="XSS存储型漏洞">				
+								
+								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="XSS存储型漏洞"/>
 							</a>
 						</div>
 					</li>											
@@ -542,68 +593,22 @@
 			
 					<li>
 						<div class="relate-post-text">
-							<a class="relate-post-title" href="/2019/06/13/ActiveMQ反序列化漏洞(CVE-2015-5254)/" title="ActiveMQ反序列化漏洞(CVE-2015-5254)">
-								ActiveMQ反序列化漏洞(CVE-2015-5254)			
+							<a class="relate-post-title" href="/2019/06/13/Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析/" title="Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析">
+								Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析			
 							</a>
 							<p class="relate-post-date">
 								<i class="fa fa-calendar"></i>
 								六月 13日, 2019				
 							</p>
 							<p class="relate-post-content">
-								1.漏洞介绍：Apache ActiveMQ是美国阿帕奇（Apache）软件基金会所研发的一套开源的消息中间件，它支持Java消息服务，集群，Spring Framework等。Apache ActiveMQ 5.13.0之前5.x版...
+								1.漏洞背景：ActiveMQ 是 Apache 软件基金会下的一个开源消息驱动中间件软件。Jetty 是一个开源的 servlet 容器，它为基于 Java 的 web 容器，例如 JSP 和 servlet 提供运行环境。Acti...
 							</p>
 						</div>
 
 						<div class="relate-post-cover">
-							<a href="/2019/06/13/ActiveMQ反序列化漏洞(CVE-2015-5254)/" title="ActiveMQ反序列化漏洞(CVE-2015-5254)">				
+							<a href="/2019/06/13/Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析/" title="Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析">				
 								
-								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="ActiveMQ反序列化漏洞(CVE-2015-5254)"/>
-							</a>
-						</div>
-					</li>											
-			
-			
-					<li>
-						<div class="relate-post-text">
-							<a class="relate-post-title" href="/2019/06/24/centos7安装搭建驭龙hids/" title="centos7安装搭建驭龙hids">
-								centos7安装搭建驭龙hids			
-							</a>
-							<p class="relate-post-date">
-								<i class="fa fa-calendar"></i>
-								六月 24日, 2019				
-							</p>
-							<p class="relate-post-content">
-								###部署流程部署 MongoDB (3.x，驭龙不兼容2.x版本)；部署 Elasticsearch (5.x，驭龙暂不兼容6.x版本)；启动 MongoDB 、Elasticsearch；修改 web 的配置，启动 web ，在引...
-							</p>
-						</div>
-
-						<div class="relate-post-cover">
-							<a href="/2019/06/24/centos7安装搭建驭龙hids/" title="centos7安装搭建驭龙hids">				
-								
-								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="centos7安装搭建驭龙hids"/>
-							</a>
-						</div>
-					</li>											
-			
-			
-					<li>
-						<div class="relate-post-text">
-							<a class="relate-post-title" href="/2019/06/23/xss存储型漏洞/" title="XSS存储型漏洞">
-								XSS存储型漏洞			
-							</a>
-							<p class="relate-post-date">
-								<i class="fa fa-calendar"></i>
-								六月 23日, 2019				
-							</p>
-							<p class="relate-post-content">
-								利用github搭建的博客网站，上传文章发现有xss存储型漏洞。漏洞复现：1.按照我的正常上传流程，使用markdown在线编辑器写文章，然后进行上传。如上图所示，打算上传一篇漏洞复现的文章。上传成功后，打开浏览器进行访问。发现存在x...
-							</p>
-						</div>
-
-						<div class="relate-post-cover">
-							<a href="/2019/06/23/xss存储型漏洞/" title="XSS存储型漏洞">				
-								
-								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="XSS存储型漏洞"/>
+								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析"/>
 							</a>
 						</div>
 					</li>											
