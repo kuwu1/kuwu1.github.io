@@ -13,7 +13,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
   <title>
     
-      Appweb(CVE-2018-8715)漏洞复现 | 酷武.
+      Discuz!X前台任意文件删除漏洞重现 | 酷武.
     
   </title>
   <meta name="author" content="小武">
@@ -164,7 +164,7 @@
 	<!-- Page title -->
 	<p>
 		
-			当前文章&nbsp;:&nbsp;《Appweb(CVE-2018-8715)漏洞复现》
+			当前文章&nbsp;:&nbsp;《Discuz!X前台任意文件删除漏洞重现》
 		
 	</p>
 
@@ -273,8 +273,8 @@
 	<div class="article-title">
 		<i class="fa fa-paper-plane-o" aria-hidden="true"></i>
 		
-	<a href="/2019/06/15/Appweb(CVE-2018-8715)漏洞复现/" itemprop="url">
-		Appweb(CVE-2018-8715)漏洞复现
+	<a href="/2019/06/23/Discuz!X前台任意文件删除漏洞重现/" itemprop="url">
+		Discuz!X前台任意文件删除漏洞重现
 	</a>
 
 	</div>
@@ -287,9 +287,9 @@
 
 	发布于
 
-	<a href="/2019/06/15/Appweb(CVE-2018-8715)漏洞复现/" itemprop="url">
-		<time datetime="2019-06-15T01:18:09.000Z" itemprop="datePublished">
-	  		2019-06-15
+	<a href="/2019/06/23/Discuz!X前台任意文件删除漏洞重现/" itemprop="url">
+		<time datetime="2019-06-23T10:32:49.000Z" itemprop="datePublished">
+	  		2019-06-23
 	  </time>
 	</a>
 	&nbsp;
@@ -305,9 +305,9 @@
 
 	更新于
 
-	<a href="/2019/06/15/Appweb(CVE-2018-8715)漏洞复现/" itemprop="url">
-		<time datetime="2019-06-15T01:18:09.000Z" itemprop="dateUpdated">
-	  		2019-08-15
+	<a href="/2019/06/23/Discuz!X前台任意文件删除漏洞重现/" itemprop="url">
+		<time datetime="2019-06-23T10:32:49.000Z" itemprop="dateUpdated">
+	  		2019-08-16
 	  </time>
 	</a> 
 
@@ -332,8 +332,11 @@
 	</div>
 
 	<div class="article-content" id="article-content">
-		<p>漏洞背景：<br>Appweb是一个嵌入式HTTP Web服务器，主要的设计思路是安全。这是直接集成到客户的应用和设备，便于开发和部署基于Web的应用程序和设备。它迅速（ 每秒处理3500多要求）而紧凑 ，其中包括支持动态网页制作，服务器端嵌入式脚本过程中的CGI ，可加载模块的SSL ，摘要式身份验证，虚拟主机， Apache样式配置，日志记录，单和多线程应用程序。它提供了大量的文档和示例。</p>
-<p>漏洞复现：<br>1.访问自己的目标。<br><img src="https://s2.ax1x.com/2019/08/15/mAUyB6.png" alt="mAUyB6.png"><br>2.获取用户名，这个就显现出此漏洞的局限性了。靶场里告诉了有一个账户是joshua。通过抓包软件拦截，添加以下HTTP 头信息后，发送数据包。<br>Authorization: Digest username=joshua<br><img src="https://s2.ax1x.com/2019/08/15/mAU7Hf.png" alt="mAU7Hf.png"><br>3.返回状态码为200后，获取HTTP 头信息中的session。<br><img src="https://s2.ax1x.com/2019/08/15/mAatKI.png" alt="mAatKI.png"><br><img src="https://s2.ax1x.com/2019/08/15/mAajIO.png" alt="mAajIO.png"><br>4.通过抓包软件拦截，发送POST请求，添加session到HTTP 头信息和用户名后，发送数据包。<br><img src="https://s2.ax1x.com/2019/08/15/mAdEo8.png" alt="mAdEo8.png"><br>5.成了。<br><a href="https://imgchr.com/i/mAazJe" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/08/15/mAazJe.png" alt="mAazJe.png"></a></p>
+		<p>漏洞背景：<br>Discuz!X社区软件，是一个采用 PHP 和 MySQL 等其他多种数据库构建的性能优异、功能全面、安全稳定的社区论坛平台。</p>
+<p>2017年9月29日，Discuz!修复了一个安全问题用于加强安全性，这个漏洞会导致前台用户可以导致任意删除文件漏洞。</p>
+<p>2017年9月29日，知道创宇404 实验室开始应急，经过知道创宇404实验室分析确认，该漏洞于2014年6月被提交到 Wooyun漏洞平台，Seebug漏洞平台收录了该漏洞，漏洞编号 ssvid-93588。该漏洞通过配置属性值，导致任意文件删除。</p>
+<p>经过分析确认，原有的利用方式已经被修复，添加了对属性的 formtype 判断，但修复方式不完全导致可以绕过，通过模拟文件上传可以进入其他 unlink 条件，实现任意文件删除漏洞。</p>
+<p>漏洞复现：<br>1.进入设置-个人资料，先在页面源代码找到formhash值，可以看到值为2599b5e5<br><img src="https://s2.ax1x.com/2019/08/16/mZkU2Q.png" alt="mZkU2Q.png"><br>2.开启一个插件Hackbar<br>Post数据：birthprovince=../../../importantfile.txt&amp;profilesubmit=1&amp;formhash=2599b5e5<br><img src="https://s2.ax1x.com/2019/08/16/mZkIVx.png" alt="mZkIVx.png"><br>执行后会显示一片空白，你再刷新下或重新访问下就好了。<br><img src="https://s2.ax1x.com/2019/08/16/mZVSC8.png" alt="mZVSC8.png"><br><img src="https://s2.ax1x.com/2019/08/16/mZVEEq.png" alt="mZVEEq.png"><br>3.出生地被修改成要删除的文件。<br>最后构造表单执行删除文件<br><img src="https://s2.ax1x.com/2019/08/16/mZVBqA.png" alt="mZVBqA.png"><br>生成.html，上面的需要自己修改。<br>4.然后随便上传一张图片，就能删除自己要删除的。<br><img src="https://s2.ax1x.com/2019/08/16/mZVLzF.png" alt="mZVLzF.png"><br>5.再访问回去看一下。<br><img src="https://s2.ax1x.com/2019/08/16/mZVzZR.png" alt="mZVzZR.png"><br>复现成功。</p>
 	
 	</div>
 	
@@ -352,12 +355,8 @@
 	<span>
 		<a href="javascript: window.scrollTo(0, 0);">返回顶部</a>
 		
-			<a href="/2019/06/15/利用最新Apache解析漏洞（CVE-2017-15715）绕过上传黑名单/" title="利用最新Apache解析漏洞（CVE-2017-15715）绕过上传黑名单" rel="prev">
-				&laquo;上一篇
-			</a>
 		
-		
-			<a href="/2019/06/13/Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析/" title="Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析" rel="next">
+			<a href="/2019/06/23/Drupal 远程代码执行漏洞（CVE-2018-7602）/" title="Drupal 远程代码执行漏洞（CVE-2018-7602）" rel="next">
 				下一篇&raquo;
 			</a>
 			
@@ -375,30 +374,6 @@
 <div class="relate-post">
 	
 		<ul>
-			
-					<li>
-						<div class="relate-post-text">
-							<a class="relate-post-title" href="/2019/06/23/Discuz!X前台任意文件删除漏洞重现/" title="Discuz!X前台任意文件删除漏洞重现">
-								Discuz!X前台任意文件删除漏洞重现			
-							</a>
-							<p class="relate-post-date">
-								<i class="fa fa-calendar"></i>
-								六月 23日, 2019				
-							</p>
-							<p class="relate-post-content">
-								漏洞背景：Discuz!X社区软件，是一个采用 PHP 和 MySQL 等其他多种数据库构建的性能优异、功能全面、安全稳定的社区论坛平台。
-2017年9月29日，Discuz!修复了一个安全问题用于加强安全性，这个漏洞会导致前台用户可...
-							</p>
-						</div>
-
-						<div class="relate-post-cover">
-							<a href="/2019/06/23/Discuz!X前台任意文件删除漏洞重现/" title="Discuz!X前台任意文件删除漏洞重现">				
-								
-								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="Discuz!X前台任意文件删除漏洞重现"/>
-							</a>
-						</div>
-					</li>											
-			
 			
 					<li>
 						<div class="relate-post-text">
@@ -511,6 +486,29 @@
 							<a href="/2019/06/15/利用最新Apache解析漏洞（CVE-2017-15715）绕过上传黑名单/" title="利用最新Apache解析漏洞（CVE-2017-15715）绕过上传黑名单">				
 								
 								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="利用最新Apache解析漏洞（CVE-2017-15715）绕过上传黑名单"/>
+							</a>
+						</div>
+					</li>											
+			
+			
+					<li>
+						<div class="relate-post-text">
+							<a class="relate-post-title" href="/2019/06/15/Appweb(CVE-2018-8715)漏洞复现/" title="Appweb(CVE-2018-8715)漏洞复现">
+								Appweb(CVE-2018-8715)漏洞复现			
+							</a>
+							<p class="relate-post-date">
+								<i class="fa fa-calendar"></i>
+								六月 15日, 2019				
+							</p>
+							<p class="relate-post-content">
+								漏洞背景：Appweb是一个嵌入式HTTP Web服务器，主要的设计思路是安全。这是直接集成到客户的应用和设备，便于开发和部署基于Web的应用程序和设备。它迅速（ 每秒处理3500多要求）而紧凑 ，其中包括支持动态网页制作，服务器端嵌...
+							</p>
+						</div>
+
+						<div class="relate-post-cover">
+							<a href="/2019/06/15/Appweb(CVE-2018-8715)漏洞复现/" title="Appweb(CVE-2018-8715)漏洞复现">				
+								
+								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="Appweb(CVE-2018-8715)漏洞复现"/>
 							</a>
 						</div>
 					</li>											
