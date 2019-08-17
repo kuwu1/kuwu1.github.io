@@ -13,7 +13,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
   <title>
     
-      nginx+lua+ngx_lua_waf实现waf功能 | 酷武.
+       | 酷武.
     
   </title>
   <meta name="author" content="小武">
@@ -164,7 +164,7 @@
 	<!-- Page title -->
 	<p>
 		
-			当前文章&nbsp;:&nbsp;《nginx+lua+ngx_lua_waf实现waf功能》
+			当前文章&nbsp;:&nbsp;《》
 		
 	</p>
 
@@ -266,6 +266,18 @@
 		插件作者：KELEN
 		插件来源: https://github.com/KELEN/katelog
 -->
+
+	
+		<div class="layout-toc">
+			<div id="layout-toc">
+				<div class="k-catelog-list" id="catelog-list" data-title="文章目录"></div>
+			</div>
+		</div>
+
+		
+		<script src="/plugin/toc/katelog.min.js"></script>
+
+		
 	 
 
 <div class="layout-post">
@@ -273,10 +285,6 @@
 	<div class="article-title">
 		<i class="fa fa-paper-plane-o" aria-hidden="true"></i>
 		
-	<a href="/2019/06/21/nginx+lua+ngx_lua_waf实现waf功能/" itemprop="url">
-		nginx+lua+ngx_lua_waf实现waf功能
-	</a>
-
 	</div>
 
 	<div class="article-meta">
@@ -287,9 +295,9 @@
 
 	发布于
 
-	<a href="/2019/06/21/nginx+lua+ngx_lua_waf实现waf功能/" itemprop="url">
-		<time datetime="2019-06-21T12:19:49.000Z" itemprop="datePublished">
-	  		2019-06-21
+	<a href="/2019/08/17/驭龙hids初始化规则/" itemprop="url">
+		<time datetime="2019-08-17T00:58:15.064Z" itemprop="datePublished">
+	  		2019-08-17
 	  </time>
 	</a>
 	&nbsp;
@@ -305,9 +313,9 @@
 
 	更新于
 
-	<a href="/2019/06/21/nginx+lua+ngx_lua_waf实现waf功能/" itemprop="url">
-		<time datetime="2019-06-21T12:19:49.000Z" itemprop="dateUpdated">
-	  		2019-08-15
+	<a href="/2019/08/17/驭龙hids初始化规则/" itemprop="url">
+		<time datetime="2019-08-17T00:58:15.064Z" itemprop="dateUpdated">
+	  		2019-08-17
 	  </time>
 	</a> 
 
@@ -316,13 +324,7 @@
 		</span>
 		<span>
 			<i class="fa fa-tags"></i>
-			
-	
-		<a href="/tags/安装文档/" class=" ">
-			安装文档
-		</a>
-	
-		
+					
 		</span>
 		
 		
@@ -332,15 +334,9 @@
 	</div>
 
 	<div class="article-content" id="article-content">
-		<p>用途：</p>
-<pre><code>防止sql注入，本地包含，部分溢出，fuzzing测试，xss,SSRF等web攻击
-防止svn/备份之类文件泄漏
-防止ApacheBench之类压力测试工具的攻击
-屏蔽常见的扫描黑客工具，扫描器
-屏蔽异常的网络请求
-屏蔽图片附件类目录php执行权限
-防止webshell上传</code></pre><p>1.下载并解压luajit 2.0.5<br>wget <a href="http://luajit.org/download/LuaJIT-2.0.5.tar.gz" target="_blank" rel="noopener">http://luajit.org/download/LuaJIT-2.0.5.tar.gz</a><br>tar -zxvf LuaJIT-2.0.5.tar.gz<br>cd LuaJIT-2.0.5<br>make install PREFIX=/data/luajit（选自己的目录）<br><a href="https://imgchr.com/i/mAcJkn" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/08/15/mAcJkn.png" alt="mAcJkn.png"></a><br>2.软连接<br>ln -s /usr/local/luajit/lib/libluajit-5.1.so.2 /lib64/libluajit-5.1.so.2<br><img src="https://s2.ax1x.com/2019/08/15/mARa1P.png" alt="mARa1P.png"><br>3.下载并解压ngx_devel_kit<br>wget <a href="https://github.com/simpl/ngx_devel_kit/archive/v0.3.0.tar.gz" target="_blank" rel="noopener">https://github.com/simpl/ngx_devel_kit/archive/v0.3.0.tar.gz</a><br>tar -zxvf v0.3.0.tar.gz<br><a href="https://imgchr.com/i/mAR2pq" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/08/15/mAR2pq.png" alt="mAR2pq.png"></a><br>4.下载并解压lua-nginx-module<br>wget <a href="https://github.com/openresty/lua-nginx-module/archive/v0.10.14rc3.tar.gz" target="_blank" rel="noopener">https://github.com/openresty/lua-nginx-module/archive/v0.10.14rc3.tar.gz</a><br>tar -zxvf v0.10.14rc3.tar.gz<br><img src="https://s2.ax1x.com/2019/08/15/mARI74.png" alt="mARI74.png"><br>5.编译安装nginx<br>①下载依赖包<br>yum install -y gcc gcc-c++ wget git geoip-devel gd-devel pcre-deve libcurl-devel libxml2 libxml2-devel libgd-devel openssl-devel<br><img src="https://s2.ax1x.com/2019/08/15/mARHhR.png" alt="mARHhR.png"><br>②下载nginx包<br>wget <a href="http://nginx.org/download/nginx-1.15.2.tar.gz" target="_blank" rel="noopener">http://nginx.org/download/nginx-1.15.2.tar.gz</a><br><img src="https://s2.ax1x.com/2019/08/15/mARXjK.png" alt="mARXjK.png"><br>③编译安装（目录看对了 选自己的目录）<br>./configure <br>–prefix=/data/nginx <br>–error-log-path=/var/log/php-fpm/error.log <br>–http-log-path=/phpstudy/server/nginx/logs/access.log <br>–with-http_ssl_module <br>–with-http_v2_module <br>–with-http_realip_module <br>–with-http_addition_module <br>–with-http_image_filter_module <br>–with-http_geoip_module <br>–with-http_sub_module <br>–with-http_dav_module <br>–with-http_flv_module <br>–with-http_mp4_module <br>–with-http_gunzip_module <br>–with-http_gzip_static_module <br>–with-http_random_index_module <br>–with-http_secure_link_module <br>–with-http_degradation_module <br>–with-http_slice_module <br>–with-http_stub_status_module <br>–with-pcre <br>–with-pcre-jit <br>–with-stream <br>–with-stream_ssl_module <br>–with-debug <br>–add-module=/data/ngx_devel_kit-0.3.0 <br>–add-module=/data/lua-nginx-module-0.10.14rc3 <br>–with-ld-opt=”-Wl,-rpath,$LUAJIT_LIB” ;<br><img src="https://s2.ax1x.com/2019/08/15/mAWpAH.png" alt="mAWpAH.png"><br>（报错的话 自己百度找问题 都有答案及详解的）<br>④编译安装<br>make &amp;&amp; make install<br>6.将waf功能模块，解压后重命名为waf（并移动到nginx的配置目录下）<br>mv /data/ngx_lua_waf-0.7.2/ waf<br>cp -rf /data/waf/ /data/nginx/conf/<br>7.修改waf模块的规则配置路径<br>8.vim /data/nginx/conf/waf/config.lua<br>RulePath = “/usr/local/nginx/conf/waf/wafconf/“<br>–规则存放目录<br>attacklog = “off”<br>–是否开启<strong><em>信息记录，需要配置logdir<br>logdir = “/usr/local/nginx/logs/hack/“<br>–log存储目录，该目录需要用户自己新建，切需要nginx用户的可写权限<br>UrlDeny=”on”<br>–是否拦截url访问<br>Redirect=”on”<br>–是否拦截后重定向<br>CookieMatch = “on”<br>–是否拦截cookie</em></strong><br>postMatch = “on”<br>–是否拦截post<strong>*<br>whiteModule = “on”<br>–是否开启URL白名单<br>black_fileExt={“php”,”jsp”}<br>–填写不允许上传文件后缀类型<br>ipWhitelist={“127.0.0.1”}<br>–ip白名单，多个ip用逗号分隔<br>ipBlocklist={“1.0.0.1”}<br>–ip黑名单，多个ip用逗号分隔<br>CCDeny=”on”<br>–是否开启拦截cc*</strong>(需要nginx.conf的http段增加lua_shared_dict limit 10m;)<br>CCrate = “100/60”<br>–设置cc***频率，单位为秒.<br>–默认1分钟同一个IP只能请求同一个地址100次<br>html=[[Please go away~~]]<br>–警告内容,可在中括号内自定义<br>备注:不要乱动双引号，区分大小写</p>
-<p>9.修改nginx的配置文件使其加载waf功能模块,并加载博客的nginx配置文件<br>vim /data/nginx/conf/nginx.conf<br>http里面添加如下<br>lua_package_path “/data/nginx/conf/waf/config.lua”;<br>lua_shared_dict limit 10m;<br>init_by_lua_file /usr/local/nginx/conf/waf/init.lua;<br>access_by_lua_file /usr/local/nginx/conf/waf/waf.lua;<br>10.启动nginx设置开机启动<br>systemctl start nginx.service<br>systemctl enable nginx.service<br>11.创建nginx软连接<br>ln -s /usr/local/nginx/sbin/* /usr/local/sbin/<br>12.http://你的IP/test.php?id=../etc/passwd<br><img src="https://s2.ax1x.com/2019/08/15/mAWkgP.png" alt="mAWkgP.png"></p>
+		<hr>
+<p>title: 驭龙hids初始化规则<br>date: 2019-06-25 11:40:11</p>
+<h2 id="tags-安装文档"><a href="#tags-安装文档" class="headerlink" title="tags: 安装文档"></a>tags: 安装文档</h2><p>[<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “web进程执行了系统命令，可能为命令执行漏洞或者webshell行为”,<br>            “level”: 0,<br>            “name”: “WebServer可疑进程启动(windows)”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “^(cmd\.exe|powershell\.exe)$”,<br>                “type”: “regex”<br>            },<br>            “parentname”: {<br>                “data”: “^(w3wp\.exe|httpd\.exe|nginx\.exe|php-cgi\.exe)$”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “所有服务器从未出现过的进程”,<br>            “level”: 1,<br>            “name”: “首次出现进程”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “1”,<br>                “type”: “count”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “all”<br>    },<br>    {<br>        “and”: false,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “黑客工具和可疑程序列表”,<br>            “level”: 0,<br>            “name”: “黑客工具(windows)”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “f\-scrack\.py|rtcp\.py|s5\.py|wmiexec\.vbs”,<br>                “type”: “regex”<br>            },<br>            “name”: {<br>                “data”: “^(nc\.exe|sl\.exe|hd\.exe|s\.exe|portmap\.exe|putty\.exe|s5\.exe|sock5\.exe|iisputscan\.exe|htran\.exe|hfs\.exe|rsh\.exe|netty\.exe|rexec\.exe|icenw\.exe|netsh\.exe|chopper\.exe|srvinfo\.exe|naruto-domain\.exe|rcsocket\.exe|mt\.exe|hatchet\.exe|session\.exe|cain\.exe|socksproxy\.exe|psexec\.exe|rssocks\.exe|hydra\.exe|netcat\.exe|lcx\.exe|tunnel\.exe|nmap\.exe|attrib\.exe|mshta\.exe|regasm\.exe|ieexec\.exe)$”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “linux黑客工具列表”,<br>            “level”: 0,<br>            “name”: “黑客工具(linux)”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “f-scrack\.py|rtcp\.py|s5\.py|tunnel|lcx|crack|netcat|hydra|xosver|ssock|rssocks|psexec|socks|regeorg|^nmap|rootkit”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “linux”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “Guest用户正常情况为禁止状态”,<br>            “level”: 0,<br>            “name”: “Guest用户异常”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “Guest”,<br>                “type”: “string”<br>            },<br>            “status”: {<br>                “data”: “OK”,<br>                “type”: “string”<br>            }<br>        },<br>        “source”: “userlist”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “所有服务器从未连接过的IP”,<br>            “level”: 1,<br>            “name”: “首次出口连接”<br>        },<br>        “rules”: {<br>            “remote”: {<br>                “data”: “1”,<br>                “type”: “count”<br>            }<br>        },<br>        “source”: “connection”,<br>        “system”: “all”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “企业网络中首次出现的用户”,<br>            “level”: 1,<br>            “name”: “可疑用户”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “1”,<br>                “type”: “count”<br>            }<br>        },<br>        “source”: “userlist”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “带有$符号的隐藏用户,很大可能为黑客设置的隐藏后门账户”,<br>            “level”: 0,<br>            “name”: “隐藏用户”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “\$”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “userlist”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “企业网络中首次出现的linux可登陆用户”,<br>            “level”: 1,<br>            “name”: “可疑用户”<br>        },<br>        “rules”: {<br>            “description”: {<br>                “data”: “\/bin\/bash|\/bin\/sh”,<br>                “type”: “regex”<br>            },<br>            “name”: {<br>                “data”: “1”,<br>                “type”: “count”<br>            }<br>        },<br>        “source”: “userlist”,<br>        “system”: “linux”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “非运维常用登陆IP”,<br>            “level”: 1,<br>            “name”: “可疑登陆”<br>        },<br>        “rules”: {<br>            “remote”: {<br>                “data”: “1”,<br>                “type”: “count”<br>            },<br>            “status”: {<br>                “data”: “true”,<br>                “type”: “string”<br>            }<br>        },<br>        “source”: “loginlog”,<br>        “system”: “all”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “整个内网首次出现的自启动服务”,<br>            “level”: 1,<br>            “name”: “可疑服务”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “1”,<br>                “type”: “count”<br>            },<br>            “startmode”: {<br>                “data”: “Auto”,<br>                “type”: “string”<br>            }<br>        },<br>        “source”: “service”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “企业网络中首次出现的计划任务”,<br>            “level”: 1,<br>            “name”: “可疑计划任务”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “1”,<br>                “type”: “count”<br>            }<br>        },<br>        “source”: “crontab”,<br>        “system”: “all”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “系统文件被篡改，可能为攻击者留下的后门。”,<br>            “level”: 0,<br>            “name”: “系统文件异常变化”<br>        },<br>        “rules”: {<br>            “action”: {<br>                “data”: “WRITE”,<br>                “type”: “string”<br>            },<br>            “path”: {<br>                “data”: “cmd\.exe|magnify\.exe|sethc\.exe|osk\.exe|narrator\.exe|displayswitch\.exe|powershell\.exe|explorer\.exe|\/bin\/ps|\/bin\/netstat|\/bin\/last|\/sbin\/ss|\/etc\/pam.d\/“,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “file”,<br>        “system”: “all”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “可能为攻击者上传的webshell”,<br>            “level”: 0,<br>            “name”: “可疑动态脚本写入”<br>        },<br>        “rules”: {<br>            “action”: {<br>                “data”: “WRITE”,<br>                “type”: “string”<br>            },<br>            “path”: {<br>                “data”: “\.(asp|asa|cer|cdx|htr|hdx|aspq|rem|rules|soap|svc|vbhtm[l]?|xamlx|xoml|asmx|ashx|asax|aspx|ascx|cshtm[l]?|cs|jsp|jspx|jspf|php[1-5]?)([\.]+)?$”,<br>                “type”: “regex”<br>            },<br>            “user”: {<br>                “data”: “administrators”,<br>                “type”: “non-regex”<br>            }<br>        },<br>        “source”: “file”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “利用web server的解析漏洞或者系统特性的异常文件”,<br>            “level”: 0,<br>            “name”: “异常文件写入”<br>        },<br>        “rules”: {<br>            “action”: {<br>                “data”: “WRITE”,<br>                “type”: “string”<br>            },<br>            “path”: {<br>                “data”: “\.php[1-5]?\.[a-z1-9]|\/(con|aux|prn|nul|com[1-9]|lpt[1-9])\.”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “file”,<br>        “system”: “all”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “linux可疑命令”,<br>            “level”: 1,<br>            “name”: “可疑命令”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “insmod|hacker|\/dev\/tcp\/|\/dev\/udp|history \-c|vi.<em>?history|touch \-d”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “linux”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “尝试关闭agent，可能为攻击者所为。”,<br>            “level”: 1,<br>            “name”: “关闭安全agent”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “systemctl stop yulong-hids|net stop yulong-hids”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “all”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “模仿系统文件名，伪装为系统进程，可能为恶意程序。”,<br>            “level”: 0,<br>            “name”: “伪装系统进程(svchost.exe)”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “^\&quot;?c:\\{1,2}windows\\{1,2}system32\\{1,2}svchost\.exe\&quot;?”,<br>                “type”: “non-regex”<br>            },<br>            “name”: {<br>                “data”: “svchost.exe”,<br>                “type”: “string”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “不平常的调用方式，很大几率为攻击者所为”,<br>            “level”: 1,<br>            “name”: “可疑命令调用行为”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “^(bitsadmin \/transfer|powershell \-exec bypass|powershell.</em>?webclient|rundll32|regsvr32.<em>?\/i\:|certutil.</em>?\-f|cscript.*?pubprn\.vbs)”,<br>                “type”: “regex”<br>            },<br>            “parentname”: {<br>                “data”: “^(cmd\.exe|powershell\.exe)$”,<br>                “type”: “regexp”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “数据库进程执行命令，很大几率为攻击者所为。”,<br>            “level”: 0,<br>            “name”: “数据库执行命令”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “cmd.exe”,<br>                “type”: “string”<br>            },<br>            “parentname”: {<br>                “data”: “^(sqlservr\.exe|mysqld.exe)$”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: false,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “用于导出系统密码的黑客工具，需立刻处理。”,<br>            “level”: 0,<br>            “name”: “HashDump黑客工具”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “vssown\.vbs”,<br>                “type”: “regex”<br>            },<br>            “name”: {<br>                “data”: “^(mimikatz\.exe|quarkspwdump\.exe|prodump\.exe|creddump\.exe|pwdump7\.exe|wce\.exe|gethashes\.exe|gsecdump\.exe|ntdsutil\.exe)$”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “web进程执行了系统命令，可能为命令执行漏洞或者webshell行为”,<br>            “level”: 0,<br>            “name”: “WebServer可疑进程启动(linux)”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “\/bin\/“,<br>                “type”: “regex”<br>            },<br>            “parentname”: {<br>                “data”: “^(apache[2]?|nginx|php)$”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “linux”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “web中间件执行了系统命令，可能为命令执行漏洞或者webshell行为”,<br>            “level”: 0,<br>            “name”: “Web中间件可疑进程启动(linux)”<br>        },<br>        “rules”: {<br>            “info”: {<br>                “data”: “tomcat|weblogic”,<br>                “type”: “regex”<br>            },<br>            “parentname”: {<br>                “data”: “java”,<br>                “type”: “string”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “linux”<br>    }<br>]</p>
 	
 	</div>
 	
@@ -359,12 +355,8 @@
 	<span>
 		<a href="javascript: window.scrollTo(0, 0);">返回顶部</a>
 		
-			<a href="/2019/06/22/Django debug page XSS漏洞（CVE-2017-12794）/" title="Django debug page XSS漏洞（CVE-2017-12794）" rel="prev">
-				&laquo;上一篇
-			</a>
 		
-		
-			<a href="/2019/06/21/利用Vulnhub复现漏洞 - Couchdb 垂直权限绕过漏洞（CVE-2017-12635）/" title="利用Vulnhub复现漏洞 - Couchdb 垂直权限绕过漏洞（CVE-2017-12635）" rel="next">
+			<a href="/2019/06/24/centos7安装搭建驭龙hids/" title="centos7安装搭建驭龙hids" rel="next">
 				下一篇&raquo;
 			</a>
 			
@@ -401,31 +393,6 @@
 							<a href="/2019/06/24/centos7安装搭建驭龙hids/" title="centos7安装搭建驭龙hids">				
 								
 								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="centos7安装搭建驭龙hids"/>
-							</a>
-						</div>
-					</li>											
-			
-			
-					<li>
-						<div class="relate-post-text">
-							<a class="relate-post-title" href="/2019/08/17/驭龙hids初始化规则/" title="">
-											
-							</a>
-							<p class="relate-post-date">
-								<i class="fa fa-calendar"></i>
-								八月 17日, 2019				
-							</p>
-							<p class="relate-post-content">
-								
-title: 驭龙hids初始化规则date: 2019-06-25 11:40:11
-tags: 安装文档[    {        “and”: true,        “enabled”: true,        “met...
-							</p>
-						</div>
-
-						<div class="relate-post-cover">
-							<a href="/2019/08/17/驭龙hids初始化规则/" title="">				
-								
-								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt=""/>
 							</a>
 						</div>
 					</li>											
@@ -519,6 +486,35 @@ tags: 安装文档[    {        “and”: true,        “enabled”: true,    
 							<a href="/2019/06/22/Django debug page XSS漏洞（CVE-2017-12794）/" title="Django debug page XSS漏洞（CVE-2017-12794）">				
 								
 								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="Django debug page XSS漏洞（CVE-2017-12794）"/>
+							</a>
+						</div>
+					</li>											
+			
+			
+					<li>
+						<div class="relate-post-text">
+							<a class="relate-post-title" href="/2019/06/21/nginx+lua+ngx_lua_waf实现waf功能/" title="nginx+lua+ngx_lua_waf实现waf功能">
+								nginx+lua+ngx_lua_waf实现waf功能			
+							</a>
+							<p class="relate-post-date">
+								<i class="fa fa-calendar"></i>
+								六月 21日, 2019				
+							</p>
+							<p class="relate-post-content">
+								用途：
+防止sql注入，本地包含，部分溢出，fuzzing测试，xss,SSRF等web攻击
+防止svn/备份之类文件泄漏
+防止ApacheBench之类压力测试工具的攻击
+屏蔽常见的扫描黑客工具，扫描器
+屏蔽异常的网络请求
+屏蔽图片...
+							</p>
+						</div>
+
+						<div class="relate-post-cover">
+							<a href="/2019/06/21/nginx+lua+ngx_lua_waf实现waf功能/" title="nginx+lua+ngx_lua_waf实现waf功能">				
+								
+								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="nginx+lua+ngx_lua_waf实现waf功能"/>
 							</a>
 						</div>
 					</li>											
